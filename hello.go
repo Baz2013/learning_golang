@@ -1,5 +1,5 @@
-package learning_golang
+package main
 
 func Hello() string {
-    return "Hello, world."
+	return "Hello, world."
 }
