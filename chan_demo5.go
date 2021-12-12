@@ -2,9 +2,9 @@ package main
 
 import "fmt"
 
-func main() {
-	demo5()
-}
+//func main() {
+//	demo5()
+//}
 
 func demo5() {
 	squareCh := make(chan int)
@@ -23,6 +23,7 @@ func calcCube(number int, ch chan int) {
 	sum := 0
 
 	go getDigit(number, digitCh)
+	//  for range 循环分别监听了它们的信道，直到该信道关闭
 	for v := range digitCh {
 		sum += v * v
 	}
@@ -45,6 +46,7 @@ func calcSquare(number int, ch chan int) {
 	sum := 0
 
 	go getDigit(number, digitCh)
+	//  for range 循环分别监听了它们的信道，直到该信道关闭
 	for v := range digitCh {
 		sum += v * v * v
 	}
