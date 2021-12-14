@@ -24,9 +24,9 @@ type Result struct {
 var jobs = make(chan Job, 10)
 var results = make(chan Result, 10)
 
-func main() {
-	workPoolDemo()
-}
+//func main() {
+//	workPoolDemo()
+//}
 
 func workPoolDemo() {
 	startTime := time.Now()
