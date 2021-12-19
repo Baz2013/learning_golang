@@ -48,7 +48,7 @@ func demo11() {
 	d2.Describe2()
 }
 
-func main() {
-	demo11()
-
-}
+//func main() {
+//	demo11()
+//
+//}
