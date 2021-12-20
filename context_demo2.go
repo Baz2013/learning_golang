@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func main() {
-	demo13()
-}
+//func main() {
+//	demo13()
+//}
 
 func demo13() {
 	// gen generates integers in a separate goroutine and
