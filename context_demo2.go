@@ -7,6 +7,14 @@ import (
 
 //func main() {
 //	demo13()
+
+//headers := make(map[string]string)
+//headers["Date"] = "Tue, 21 Dec 2021 02:41:17 GMT"
+//headers["AUTHORIZATION"] = "Sign f00f98d5-56a5-4047-a420-01b4aebc158a:ZDMxNmNlZDdjY2VjMDIyMDRiYjY2MDIwMWMzOGM3NDQ="
+//// loop over elements of slice
+//for k, v := range headers {
+//	fmt.Println(k, "value is:", v)
+//}
 //}
 
 func demo13() {
