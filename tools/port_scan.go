@@ -1,9 +1,9 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net"
-	"sync"
 	"time"
 )
 
@@ -21,22 +21,25 @@ type HostScanner struct {
 }
 
 type HostScan interface {
-	Scan(wg *sync.WaitGroup)
+	Scan(ctx context.Context)
 }
 
 // Scan 端口扫描的主要执行逻辑
-func (hs *HostScanner) Scan(wg *sync.WaitGroup) {
+func (hs *HostScanner) Scan(ctx context.Context) {
 	fmt.Println("开始扫描....")
 	for _, host := range hs.hosts {
 		address := fmt.Sprintf("%s:%d", host.Ip, host.Port)
 		if _, err := net.DialTimeout("tcp", address, time.Duration(hs.timeout)*time.Millisecond); err != nil {
 			msg := fmt.Sprintf("%s 端口不通！", address)
-			//hs.msgCh <- msg
-			fmt.Println(msg)
+			hs.msgCh <- msg
+			//fmt.Println(msg)
+		} else {
+			msg := fmt.Sprintf("%s 端口可访问！", address)
+			hs.msgCh <- msg
 		}
 	}
 
-	wg.Done() // 任务结束
+	//wg.Done() // 任务结束
 }
 
 // readConf 读取文本文件获取要扫描的主机端口
@@ -69,7 +72,8 @@ func main() {
 	hosts := readConf()
 	ch := make(chan string)
 
-	wg := sync.WaitGroup{}
+	//wg := sync.WaitGroup{}
+	ctx, cancel := context.WithCancel(context.Background())
 
 	steps := 5
 	length := len(hosts)
@@ -80,19 +84,30 @@ func main() {
 	for i := 0; i < length; i = i + 5 {
 		if i+steps > length {
 			var scanner HostScan = &HostScanner{hosts: hosts[i:length], timeout: 2000, msgCh: ch}
-			wg.Add(1)
-			go scanner.Scan(&wg)
+			//wg.Add(1)
+			go scanner.Scan(ctx)
 			cnt++
 			break
 		} else {
 			var scanner HostScan = &HostScanner{hosts: hosts[i : i+5], timeout: 2000, msgCh: ch}
-			wg.Add(1)
-			go scanner.Scan(&wg)
+			//wg.Add(1)
+			go scanner.Scan(ctx)
 			cnt++
 		}
 	}
 
 	fmt.Printf("启动的协程数: %d \n", cnt)
 
-	wg.Wait()
+	i := 1
+	for msg := range ch {
+		fmt.Println(msg)
+		if i == length {
+			break
+		}
+		i++
+	}
+
+	cancel()
+
+	//wg.Wait()
 }
