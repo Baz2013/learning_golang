@@ -29,7 +29,8 @@ func (hs *HostScanner) Scan() {
 	for _, host := range hs.hosts {
 		address := fmt.Sprintf("%s:%d", host.Ip, host.Port)
 		if _, err := net.DialTimeout("tcp", address, time.Duration(hs.timeout)*time.Millisecond); err != nil {
-			fmt.Printf("%s 端口不通！", address)
+			msg := fmt.Sprintf("%s 端口不通！", address)
+			hs.msgCh <- msg
 		}
 	}
 
@@ -55,6 +56,14 @@ func main() {
 	ch := make(chan string)
 
 	var scanner HostScan = &HostScanner{hosts: hosts, timeout: 2000, msgCh: ch}
-	scanner.Scan()
+	go scanner.Scan()
+
+	for {
+		select {
+		case m := <-ch:
+			println(m)
+		}
+
+	}
 
 }
