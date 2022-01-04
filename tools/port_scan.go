@@ -1,9 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"context"
+	"flag"
 	"fmt"
 	"net"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -42,34 +47,80 @@ func (hs *HostScanner) Scan(ctx context.Context) {
 	//wg.Done() // 任务结束
 }
 
-// readConf 读取文本文件获取要扫描的主机端口
-func readConf() (hosts []Host) {
+// readData 读取文本文件获取要扫描的主机端口
+func readData(file string) (hosts []Host, err error) {
 
-	hosts = []Host{
-		{"127.0.0.1", 2222, false, ""},
-		{"127.0.0.1", 23339, false, ""},
-		{"127.0.0.1", 16379, false, ""},
-		{"127.0.0.1", 3389, false, ""},
-		{"127.0.0.1", 8080, false, ""},
-		{"127.0.0.1", 8081, false, ""},
-		{"127.0.0.1", 18080, false, ""},
-		{"127.0.0.1", 3322, false, ""},
-		{"127.0.0.1", 32222, false, ""},
-		{"127.0.0.1", 8082, false, ""},
-		{"127.0.0.1", 8083, false, ""},
-		{"127.0.0.1", 3422, false, ""},
-		{"127.0.0.1", 3500, false, ""},
-		{"127.0.0.1", 5000, false, ""},
-		{"127.0.0.1", 32222, false, ""},
-		{"127.0.0.1", 32223, false, ""},
+	hosts = []Host{}
+
+	fp, err := os.Open(file)
+	if err != nil {
+		fmt.Printf("打开文件错误:%s \n", err) //打开文件错误
+		return nil, err
+	}
+
+	defer fp.Close()
+	buf := bufio.NewScanner(fp)
+	for {
+		if !buf.Scan() {
+			break //文件读完了,退出for
+		}
+		line := buf.Text() //获取每一行
+		items := strings.Split(line, ":")
+		if len(items) != 2 {
+			fmt.Printf("Warning: 有错误数据！ %s\n", line)
+			continue
+		}
+		port, err := strconv.Atoi(items[1])
+		if err != nil {
+			fmt.Printf("Warning: 端口不是数字！ %s\n", line)
+			continue
+		}
+		host := Host{
+			Ip:          items[0],
+			Port:        port,
+			IsReachable: false,
+			msg:         "",
+		}
+
+		hosts = append(hosts, host)
 	}
 
 	return
 }
 
+var (
+	infoFlag = false
+	step     = 100
+	datafile = ""
+)
+
+func init() {
+	//flag.BoolVar(&daemonFlag, "d", false, "start as Daemon")
+	flag.StringVar(&datafile, "f", "D:\\github\\learning_golang\\tools\\address.dat", "config.yml path")
+	flag.IntVar(&step, "s", 100, "batch size")
+	flag.BoolVar(&infoFlag, "V", false, "version info")
+}
+
 func main() {
 
-	hosts := readConf()
+	// 解析命令行参数
+	flag.Parse()
+	if infoFlag {
+		fmt.Println("usage:   port_scan -f .\\address.dat -s 100")
+		return
+	}
+
+	fmt.Printf("data file:%s, step:%d \n", datafile, step)
+
+	hosts, err := readData(datafile)
+	if err != nil {
+		fmt.Println("读取数据文件失败")
+		return
+	}
+	if len(hosts) == 0 {
+		fmt.Println("未读取到数据")
+		return
+	}
 	ch := make(chan string)
 
 	//wg := sync.WaitGroup{}
