@@ -6,7 +6,11 @@ import (
 	"net/http"
 )
 
-func main() {
+//func main() {
+//	httpDemo()
+//}
+
+func httpDemo() {
 	//resp, err := http.Get("http://172.16.6.126:18080/api/users/v1/profile/")
 
 	req, _ := http.NewRequest("GET", "http://172.16.6.126:18080/api/users/v1/profile/", nil)
@@ -28,5 +32,4 @@ func main() {
 
 	//var serviceResp ServiceResp
 	//respByte, _ := ioutil.ReadAll(resp.Body)
-
 }
