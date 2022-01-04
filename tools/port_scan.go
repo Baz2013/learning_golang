@@ -34,13 +34,18 @@ func (hs *HostScanner) Scan(ctx context.Context) {
 	fmt.Println("开始扫描....")
 	for _, host := range hs.hosts {
 		address := fmt.Sprintf("%s:%d", host.Ip, host.Port)
-		if _, err := net.DialTimeout("tcp", address, time.Duration(hs.timeout)*time.Millisecond); err != nil {
-			msg := fmt.Sprintf("%s 端口不通！", address)
+		conn, err := net.DialTimeout("tcp", address, time.Duration(hs.timeout)*time.Millisecond)
+		if err != nil {
+			msg := fmt.Sprintf("%s 端口不通！, Error: %s", address, err)
 			hs.msgCh <- msg
 			//fmt.Println(msg)
 		} else {
 			msg := fmt.Sprintf("%s 端口可访问！", address)
 			hs.msgCh <- msg
+			// 关闭连接
+			if err := conn.Close(); err != nil {
+				fmt.Println("关闭连接错误！！！！！")
+			}
 		}
 	}
 
