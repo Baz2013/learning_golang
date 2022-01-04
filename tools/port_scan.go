@@ -65,6 +65,8 @@ func readData(file string) (hosts []Host, err error) {
 			break //文件读完了,退出for
 		}
 		line := buf.Text() //获取每一行
+		line = strings.Trim(line, "\n")
+		line = strings.TrimSpace(line)
 		items := strings.Split(line, ":")
 		if len(items) != 2 {
 			fmt.Printf("Warning: 有错误数据！ %s\n", line)
@@ -75,8 +77,9 @@ func readData(file string) (hosts []Host, err error) {
 			fmt.Printf("Warning: 端口不是数字！ %s\n", line)
 			continue
 		}
+		ip := strings.TrimSpace(items[0])
 		host := Host{
-			Ip:          items[0],
+			Ip:          ip,
 			Port:        port,
 			IsReachable: false,
 			msg:         "",
@@ -90,14 +93,14 @@ func readData(file string) (hosts []Host, err error) {
 
 var (
 	infoFlag = false
-	step     = 100
+	step     = 10
 	datafile = ""
 )
 
 func init() {
 	//flag.BoolVar(&daemonFlag, "d", false, "start as Daemon")
 	flag.StringVar(&datafile, "f", "D:\\github\\learning_golang\\tools\\address.dat", "config.yml path")
-	flag.IntVar(&step, "s", 100, "batch size")
+	flag.IntVar(&step, "s", 10, "batch size")
 	flag.BoolVar(&infoFlag, "V", false, "version info")
 }
 
@@ -126,13 +129,13 @@ func main() {
 	//wg := sync.WaitGroup{}
 	ctx, cancel := context.WithCancel(context.Background())
 
-	steps := 5
+	steps := step
 	length := len(hosts)
 	fmt.Printf("待扫描的端口数量:%d \n", length)
 
 	cnt := 0
 
-	for i := 0; i < length; i = i + 5 {
+	for i := 0; i < length; i = i + steps {
 		if i+steps > length {
 			var scanner HostScan = &HostScanner{hosts: hosts[i:length], timeout: 2000, msgCh: ch}
 			//wg.Add(1)
@@ -140,7 +143,7 @@ func main() {
 			cnt++
 			break
 		} else {
-			var scanner HostScan = &HostScanner{hosts: hosts[i : i+5], timeout: 2000, msgCh: ch}
+			var scanner HostScan = &HostScanner{hosts: hosts[i : i+steps], timeout: 2000, msgCh: ch}
 			//wg.Add(1)
 			go scanner.Scan(ctx)
 			cnt++
