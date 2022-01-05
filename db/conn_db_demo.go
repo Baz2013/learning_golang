@@ -23,9 +23,9 @@ func initMySQL() (err error) {
 	return
 }
 
-//func main() {
-//	connDBDemo()
-//}
+func main() {
+	connDBDemo()
+}
 
 func connDBDemo() {
 	// 初始化 MySQL
