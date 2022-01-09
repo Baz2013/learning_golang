@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"time"
 )
 
 var host = "0.0.0.0"
@@ -13,26 +12,26 @@ var bufSize = 4096
 var remoteServer = "127.0.0.1"
 var remotePort = 7890
 
-func main() {
-	// Part 1: create a listener
-	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
-	if err != nil {
-		log.Fatalf("Error listener returned: %s", err)
-	}
-	defer l.Close()
-	log.Printf("server listen at %s:%d", host, port)
-
-	for {
-		// Part 2: accept new connection
-		c, err := l.Accept()
-		if err != nil {
-			log.Fatalf("Error to accept new connection: %s", err)
-		}
-
-		// Part 3: create a goroutine that reads and write back data
-		go HandleConn(c)
-	}
-}
+//func main() {
+//	// Part 1: create a listener
+//	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
+//	if err != nil {
+//		log.Fatalf("Error listener returned: %s", err)
+//	}
+//	defer l.Close()
+//	log.Printf("server listen at %s:%d", host, port)
+//
+//	for {
+//		// Part 2: accept new connection
+//		c, err := l.Accept()
+//		if err != nil {
+//			log.Fatalf("Error to accept new connection: %s", err)
+//		}
+//
+//		// Part 3: create a goroutine that reads and write back data
+//		go HandleConn(c)
+//	}
+//}
 
 func HandleConn(client net.Conn) {
 	log.Printf("TCP session open")
@@ -54,7 +53,6 @@ func HandleConn(client net.Conn) {
 		for {
 			d := make([]byte, bufSize)
 			// Read from TCP buffer
-			client.SetReadDeadline(time.Now().Add(time.Microsecond * 10))
 			n, err := client.Read(d)
 			if err != nil {
 				log.Printf("conn read %d bytes,  error: %s", n, err)
@@ -77,7 +75,6 @@ func HandleConn(client net.Conn) {
 		for {
 			d := make([]byte, bufSize)
 			// Read from TCP buffer
-			remoteConn.SetReadDeadline(time.Now().Add(time.Microsecond * 10))
 			n, err := remoteConn.Read(d)
 			if err != nil {
 				log.Printf("conn read %d bytes,  error: %s", n, err)
@@ -98,11 +95,17 @@ func HandleConn(client net.Conn) {
 		for {
 			select {
 			case c := <-clientCh:
+				if len(c) <= 0 {
+					return
+				}
 				_, err := remoteConn.Write(c)
 				if err != nil {
 					return
 				}
 			case s := <-serverCh:
+				if len(s) <= 0 {
+					return
+				}
 				_, err := client.Write(s)
 				if err != nil {
 					return
@@ -111,15 +114,4 @@ func HandleConn(client net.Conn) {
 		}
 	}()
 
-}
-
-// ConnectRemoteServer 连接远程主机z
-func ConnectRemoteServer(host string, port int) (c *net.Conn, e error) {
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", host, port))
-	if err != nil {
-		log.Fatalf("Error to open TCP connection: %s", err)
-		return &conn, err
-	}
-	log.Printf("已与远程主机 %s:%d 建立连接", host, port)
-	return &conn, nil
 }

@@ -8,9 +8,9 @@ import (
 )
 
 // 启动一个 worker goroutine 一直产生随机数，直到找到满足条件的数时，手动调用 cancel 取消 ctx，让 worker goroutine 退出
-func main() {
-	cancelContextDemo1()
-}
+//func main() {
+//	cancelContextDemo1()
+//}
 
 func cancelContextDemo1() {
 	rand.Seed(time.Now().UnixNano())
