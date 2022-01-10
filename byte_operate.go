@@ -5,7 +5,11 @@ import "fmt"
 /**
 3 字节的小端序转大端序
 */
-func main() {
+//func main() {
+//	demoByteOperate1()
+//}
+
+func demoByteOperate1() {
 	data := []byte{74, 00, 00, 00} // mysql 协议 header
 	pktLen := int(uint32(data[0]) | uint32(data[1])<<8 | uint32(data[2])<<16)
 	/**
