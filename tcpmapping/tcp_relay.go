@@ -39,9 +39,9 @@ func parseJSONConfig(config *Config, path string) error {
 	return json.NewDecoder(file).Decode(config)
 }
 
-func main() {
-	myMain()
-}
+//func main() {
+//	myMain()
+//}
 
 func myMain() {
 	// add more log flags for debugging
