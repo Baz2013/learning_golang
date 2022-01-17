@@ -21,7 +21,7 @@ func BinarySearch1(a []int, n int) int {
 	return -1
 }
 
-func BinarySearch(a []int, n int) int {
+func BinarySearch2(a []int, n int) int {
 	left := 0
 	right := len(a) // 查找区间为 a[left, right)， 一个左闭右开的区间
 
@@ -37,4 +37,30 @@ func BinarySearch(a []int, n int) int {
 	}
 
 	return -1
+}
+
+func BinarySearch(a []int, n int) int {
+	middle := len(a) / 2
+
+	if a[middle] == n {
+		return middle
+	}
+
+	if a[middle] != n && middle == 0 {
+		return -1
+	}
+
+	if a[middle] < n {
+		r := BinarySearch(a[middle+1:], n)
+		if r == -1 {
+			return -1
+		} else {
+			return middle + 1 + r
+		}
+	} else if a[middle] > n {
+		return BinarySearch(a[:middle], n)
+	}
+
+	return -1
+
 }
