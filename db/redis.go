@@ -19,7 +19,12 @@ type HostLogin struct {
 	Flag          string `json:"flag"`
 }
 
-func main() {
+//func main() {
+//	RedisDemo11()
+//
+//}
+
+func RedisDemo11() {
 	client := redis.NewClient(&redis.Options{
 		Addr:     "10.249.206.1:18887",
 		Password: "yHo@6JEcb_OjlNG^",
@@ -57,5 +62,4 @@ func main() {
 		return
 	}
 	fmt.Printf("%d clients received the message\n", n)
-
 }
