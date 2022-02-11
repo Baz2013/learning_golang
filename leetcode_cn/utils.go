@@ -17,3 +17,20 @@ func SliceValueEqual(a, b []int) bool {
 
 	return true
 }
+
+func ByteSliceValueEqual(a, b []byte) bool {
+	la := len(a)
+	lb := len(b)
+
+	if la != lb {
+		return false
+	}
+
+	for i := 0; i < la; i++ {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
