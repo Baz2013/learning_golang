@@ -61,14 +61,14 @@ func TestRemoveNthFromEnd(t *testing.T) {
 	m = removeNthFromEnd(head, 2)
 	travleLinkedList(m)
 
-	head = &ListNode{
-		Val: 1,
-		Next: &ListNode{
-			Val:  2,
-			Next: nil,
-		},
-	}
-
-	m = removeNthFromEnd(head, 3)
-	travleLinkedList(m)
+	//head = &ListNode{
+	//	Val: 1,
+	//	Next: &ListNode{
+	//		Val:  2,
+	//		Next: nil,
+	//	},
+	//}
+	//
+	//m = removeNthFromEnd(head, 3)
+	//travleLinkedList(m)
 }
