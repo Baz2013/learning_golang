@@ -15,3 +15,11 @@ func TestSplit(t *testing.T) { // 测试函数名必须以Test开头，必须接
 		t.Errorf("expected:%v, got:%v", want, got) // 测试失败输出错误提示
 	}
 }
+
+func TestSplitWithComplexSep(t *testing.T) {
+	got := Split("abcd", "bc")
+	want := []string{"a", "d"}
+	if !reflect.DeepEqual(want, got) {
+		t.Errorf("expected:%v, got:%v", want, got)
+	}
+}
