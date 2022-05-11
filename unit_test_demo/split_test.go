@@ -28,6 +28,7 @@ func TestSplitWithComplexSep(t *testing.T) {
 }
 
 // 表格驱动测试
+// 官方标准库中有很多表格驱动测试的示例，例如fmt包中的测试代码
 func TestSplitAll(t *testing.T) {
 	// 定义测试表格
 	// 这里使用匿名结构体定义了若干个测试用例
@@ -53,3 +54,15 @@ func TestSplitAll(t *testing.T) {
 		})
 	}
 }
+
+// 使用工具生成测试代码 gotests
+// 安装： go get -u github.com/cweill/gotests/...
+// gotests -all -w split.go
+// 上面的命令表示，为split.go文件的所有函数生成测试代码至split_test.go文件（目录下如果事先存在这个文件就不再生成）。
+
+// 测试覆盖率
+// go test -cover
+// go test -cover -coverprofile=out  #用来将覆盖率相关的记录信息输出到一个文件
+// go tool cover -html=out  #使用cover工具来处理生成的记录信息，该命令会打开本地的浏览器窗口生成一个HTML报告
+
+// testify是一个社区非常流行的Go单元测试工具包，其中使用最多的功能就是它提供的断言工具——testify/assert或testify/require。
