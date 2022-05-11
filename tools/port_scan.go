@@ -12,6 +12,11 @@ import (
 	"time"
 )
 
+/**
+编译为arm版本 （bash 终端下执行）
+env GOOS=linux GOARCH=arm64 go build -o port_scan_arm64
+*/
+
 type Host struct {
 	Ip          string
 	Port        int
