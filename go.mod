@@ -13,4 +13,5 @@ require (
 	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/urfave/cli v1.22.5
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
+	gopkg.in/h2non/gock.v1 v1.1.2 // indirect
 )
