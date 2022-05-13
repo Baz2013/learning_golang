@@ -3,6 +3,7 @@ module github.com/Baz2013/learning_golang
 go 1.15
 
 require (
+	bou.ke/monkey v1.0.2 // indirect
 	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/alicebob/miniredis/v2 v2.21.0 // indirect
 	github.com/czekan/go-itsdangerous v0.0.2
